@@ -6,10 +6,14 @@ fun main() {
     var password = 0
     var currentDial = 50
 
-    File("input.txt").bufferedReader().use { reader ->
+    val inputURL = {}.javaClass.getResource("/input.txt")
+    val inputFile = File(inputURL.toURI())
+
+    inputFile.bufferedReader().use { reader ->
         reader.forEachLine { line ->
-            println(line)
-            currentDial = rotateDial('l', 50, currentDial)
+            val (direction, amount) = parseLine(line)
+
+            currentDial = rotateDial(direction, amount, currentDial)
 
             if (currentDial % 100 == 0) {
                 password++
@@ -20,10 +24,16 @@ fun main() {
     println(password)
 }
 
-private fun rotateDial(direction: Char, amount: Int, current: Int): Int {
-    var newCurrent: Int
+private fun parseLine(line: String): Pair<Char, Int> {
+    val direction = line.first()
+    val amount = line.drop(1).toInt()
+    return direction to amount
+}
 
-    if (direction == 'l') {
+private fun rotateDial(direction: Char, amount: Int, current: Int): Int {
+    val newCurrent: Int
+
+    if (direction == 'L') {
         newCurrent = current - amount
     } else {
         newCurrent = current + amount
