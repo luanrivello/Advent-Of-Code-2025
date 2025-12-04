@@ -2,33 +2,33 @@ package org.cesar
 
 import java.io.File
 import kotlin.math.absoluteValue
+import kotlin.system.measureNanoTime
 
 var password = 0
 var currentDial = 50
 
 fun main() {
-    val inputURL = {}.javaClass.getResource("/input.txt")
-    val inputFile = File(inputURL.toURI())
+    val time = measureNanoTime {
+        val inputURL = {}.javaClass.getResource("/input.txt")
+        val inputFile = File(inputURL.toURI())
 
-    inputFile.bufferedReader().use { reader ->
-        reader.forEachLine { line ->
-            println("===============")
-            val (direction, amount) = parseLine(line)
+        inputFile.bufferedReader().use { reader ->
+            reader.forEachLine { line ->
+                val (direction, turnAmount) = parseLine(line)
 
-            println("Initial turn amount: " + amount)
+                val fullRotationsCount = turnAmount/100
+                val newTurnAmount = turnAmount%100
 
-            val fullRotationsCount = amount/100
-            password += fullRotationsCount
+                password += fullRotationsCount
+                currentDial %= 100
 
-            val newAmount = amount%100
-            currentDial %= 100
-
-            currentDial = rotateDial(currentDial, direction, newAmount)
+                currentDial = rotateDial(currentDial, direction, newTurnAmount)
+            }
         }
     }
 
-    println("===============")
-    println("Final Password:" + password)
+    println("Password: $password")
+    println("Execution time: ${time / 1_000_000_000.0} s")
 }
 
 private fun parseLine(line: String): Pair<Char, Int> {
@@ -37,18 +37,16 @@ private fun parseLine(line: String): Pair<Char, Int> {
     return direction to amount
 }
 
-private fun rotateDial(currentDial:Int, direction: Char, amount: Int): Int {
+private fun rotateDial(currentDial:Int, direction: Char, turnAmount: Int): Int {
     val newDial: Int
 
     if (direction == 'L') {
-        newDial = currentDial - amount
+        newDial = currentDial - turnAmount
     } else {
-        newDial = currentDial + amount
+        newDial = currentDial + turnAmount
     }
 
     countRotations(newDial, currentDial)
-    println(currentDial.toString() + " -> " + newDial.toString())
-    println("Password: " + password)
 
     return newDial
 }
