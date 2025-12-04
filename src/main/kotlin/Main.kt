@@ -52,13 +52,13 @@ private fun rotateDial(currentDial:Int, direction: Char, turnAmount: Int): Int {
 }
 
 private fun countRotations(newDial: Int, oldDial: Int) {
-    password += (newDial/100).absoluteValue
-
     if (newDial == 0) {
         password++
     } else if (newDial > 0 && oldDial < 0) {
         password++
     } else if (newDial < 0 && oldDial > 0) {
         password++
+    } else {
+        password += (newDial/100).absoluteValue
     }
 }
