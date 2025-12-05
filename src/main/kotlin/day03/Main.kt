@@ -26,26 +26,23 @@ private fun readFile(path: String): File {
 
 fun findMaximumVoltage(line: String) {
     val digits = line.map { it.digitToInt() }
+    val voltage = Array(12) { 0 }
+    var lastIndice = -1
 
-    var biggestValue = 0
-    var biggestIndice = 0
-    for (i in 0..digits.size-2) {
-        if (digits[i] > biggestValue) {
-            biggestValue = digits[i]
-            biggestIndice = i
+    for (i in voltage.indices) {
+        val stop = if (4+i < digits.size) {
+            digits.size -voltage.size +i
+        } else {
+            digits.size -1
+        }
+
+        for (j in lastIndice+1..stop) {
+            if (digits[j] > voltage[i]) {
+                voltage[i] = digits[j]
+                lastIndice = j
+            }
         }
     }
 
-    var complementValue = 0
-    for (i in biggestIndice+1 until digits.size) {
-        if (digits[i] > complementValue) {
-            complementValue = digits[i]
-        }
-    }
-
-    answer += biggestValue*10 + complementValue
-
-    //println("Digits: $digits")
-    println("Voltage: $biggestValue$complementValue")
-    //println("Answer: $answer")
+    answer += voltage.joinToString("").toLong()
 }
