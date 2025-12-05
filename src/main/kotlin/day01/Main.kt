@@ -1,4 +1,4 @@
-package org.cesar
+package org.cesar.day01
 
 import java.io.File
 import kotlin.math.absoluteValue
@@ -9,7 +9,7 @@ var currentDial = 50
 
 fun main() {
     val time = measureNanoTime {
-        val inputURL = {}.javaClass.getResource("/input.txt")
+        val inputURL = {}.javaClass.getResource("/day01/input.txt")
         val inputFile = File(inputURL.toURI())
 
         inputFile.bufferedReader().use { reader ->
