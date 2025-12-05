@@ -2,13 +2,12 @@ package org.cesar.day03
 
 import java.io.File
 import kotlin.system.measureNanoTime
-import kotlin.text.toInt
 
 var answer:Long = 0
 
 fun main() {
     val time = measureNanoTime {
-        val inputFile  = readFile("/day03/input.txt")
+        val inputFile = readFile("input.txt")
 
         inputFile.forEachLine { line ->
             findMaximumVoltage(line)
@@ -19,8 +18,9 @@ fun main() {
     println("Answer: $answer")
 }
 
-private fun readFile(path: String): File {
-    val inputURL = {}.javaClass.getResource(path)
+private fun readFile(file: String): File {
+    val day = object {}::class.java.packageName.substringAfterLast('.')
+    val inputURL = {}.javaClass.getResource("/$day/$file")
     return File(inputURL.toURI())
 }
 

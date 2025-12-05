@@ -1,13 +1,14 @@
 package org.cesar.day02
 
 import java.io.File
+import kotlin.jvm.java
 import kotlin.system.measureNanoTime
 
 var answer:Long = 0
 
 fun main() {
     val time = measureNanoTime {
-        val inputFile = readFile("/day02/input.txt")
+        val inputFile = readFile("input.txt")
         val ranges = inputFile.split(',')
 
         for (range in ranges) {
@@ -20,8 +21,9 @@ fun main() {
     println("Answer: $answer")
 }
 
-private fun readFile(path: String): String {
-    val inputURL = {}.javaClass.getResource(path)
+private fun readFile(file: String): String {
+    val day = object {}::class.java.packageName.substringAfterLast('.')
+    val inputURL = {}.javaClass.getResource("/$day/$file")
     val inputFile = File(inputURL.toURI())
 
     return inputFile.readText()
