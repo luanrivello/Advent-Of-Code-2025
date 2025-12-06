@@ -14,9 +14,11 @@ fun main() {
             it.toCharArray()
         }.toTypedArray()
 
-        //println("| ${paperRollsMatrix.size} x ${paperRollsMatrix[0].size} |")
-
-        paperRollsMatrix.countAccessibleRollsOfPaper()
+        var previousAnswer: Long
+        do {
+            previousAnswer = answer
+            paperRollsMatrix.countAccessibleRollsOfPaper()
+        } while (previousAnswer != answer)
 
         //paperRollsMatrix.printResult()
     }
@@ -34,7 +36,7 @@ fun Array<CharArray>.printResult() {
 
 
 private fun Array<CharArray>.isRollOfPaperAccessible(i: Int, j: Int): Boolean {
-    if (this[i][j] == '.') {
+    if (this[i][j] == '.' || this[i][j] == 'X') {
         return false
     }
 
@@ -46,7 +48,7 @@ private fun Array<CharArray>.isRollOfPaperAccessible(i: Int, j: Int): Boolean {
                 continue
             }
 
-            if (this[i+x][j+y] == '@' || this[i+x][j+y] == 'X') {
+            if (this[i+x][j+y] == '@') {
                 rollsAround++
             }
 
