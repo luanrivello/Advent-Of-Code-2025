@@ -13,11 +13,41 @@ fun main() {
 
         val (ranges, ids) = extractRangesAndIds(lines)
 
-        answer = ids.countValidIdsIn(ranges)
+        //answer = ids.countValidIdsIn(ranges)
+        answer = ranges.countValidIds()
     }
 
     println("Execution time: ${time / 1_000_000_000.0}s")
     println("Answer: $answer")
+}
+
+private fun List<Pair<Long, Long>>.countValidIds(): Long {
+    var count = 0L
+
+    val sorted = this.sortedBy{ it.first }
+
+    sorted.withIndex().forEach { (index, range) ->
+        var newLowerBound =
+            sorted.subList(0, index)
+                .filter { range.first in it.first..it.second}
+                .maxByOrNull { it.second }
+                ?.let { it.second +1 }
+                ?: range.first
+
+        var newUpperBound =
+            sorted.subList(0, index)
+                .filter { range.second in it.first..it.second}
+                .maxByOrNull { it.first }
+                ?.let { it.first -1 }
+                ?: range.second
+
+        //println("$newLowerBound -> ${newUpperBound} +${newUpperBound -newLowerBound +1}")
+        if (newLowerBound <= newUpperBound) {
+            count += newUpperBound -newLowerBound +1
+        }
+    }
+
+    return count
 }
 
 private fun List<Long>.countValidIdsIn(ranges: List<Pair<Long, Long>>): Long {
