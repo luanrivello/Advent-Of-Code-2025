@@ -25,24 +25,24 @@ fun main() {
 }
 
 private fun List<List<String>>.doTheMath(): Long {
-    var result = 0L
+    require(isNotEmpty()) { "Matrix must not be empty" }
 
-    this[0].indices.forEach { column ->
-        var problemResult: Long
-        if (this.last()[column] == "*") {
-            problemResult = 1L
-            this.subList(0, size-1).forEach {
-                problemResult *= it[column].toLong()
+    val dataRows = this.subList(0, size - 1)
+    val opRow = last()
+
+    return this[0].indices.sumOf { column ->
+        if (opRow[column] == "*") {
+            dataRows.fold(1L) { mult, row ->
+                mult * row[column].toLong()
             }
-        } else {
-            problemResult = this.subList(0, size-1).sumOf {
+        } else if (opRow[column] == "+") {
+            dataRows.sumOf {
                 it[column].toLong()
             }
+        } else {
+            error("Unsuported operation")
         }
-        result += problemResult
     }
-
-    return result
 }
 
 private fun readFile(file: String): File {
