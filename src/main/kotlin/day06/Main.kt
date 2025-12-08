@@ -14,7 +14,7 @@ fun main() {
         val (worksheet, operators) = extractProblems(lines)
 
         //worksheet.printResult()
-        //answer = worksheet.doTheMath(operators)
+        //answer = worksheet.doTheMathWithStr(operators)
         answer = worksheet.doTheMathWithInt(operators)
     }
 
@@ -28,9 +28,9 @@ private fun extractProblems(worksheet: List<String>): Pair<List<List<Int>>, List
     val paddedSpaces = worksheet
         .dropLast(1)
         .map { line ->
-            line + " ".repeat(maxLength - line.length)
+            line.padEnd(maxLength, ' ')
         }
-    //println(paddedSpaces.toString()
+    //println(paddedSpaces.toString())
 
     val problemsStr = mutableListOf(mutableListOf<String>())
     for (col in paddedSpaces[0].indices) {
@@ -47,7 +47,7 @@ private fun extractProblems(worksheet: List<String>): Pair<List<List<Int>>, List
     //problemsStr.printResult()
 
     val problems = problemsStr.map { problem ->
-        problem.map { num ->  num.trim().toInt() }
+        problem.map { it.trim().toInt() }
     }
     //println(problemsInt.toString())
 
