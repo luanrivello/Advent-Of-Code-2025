@@ -2,7 +2,6 @@ package org.cesar.day06
 
 import java.io.File
 import kotlin.system.measureNanoTime
-import kotlin.text.split
 
 var answer:Long = 0
 
