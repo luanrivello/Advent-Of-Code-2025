@@ -20,7 +20,7 @@ fun main() {
 
         val manifoldWithTimelines = mapCharToCell(manifold)
 
-        answer = manifold.fireTachyonBeam()
+        //answer = manifold.fireTachyonBeam()
         answer = manifoldWithTimelines.fireQuantumTachyonBeam()
 
         //println("    ==================================================================    ")
@@ -85,7 +85,7 @@ private fun List<List<Cell>>.fireQuantumTachyonBeam(): Long {
 }
 
 private fun List<List<Cell>>.countTimelines(): Long {
-    return this.last().sumOf { it.timelines }.toLong()
+    return this.last().sumOf { it.timelines }
 }
 
 private fun readFile(file: String): File {
@@ -111,7 +111,7 @@ fun <T> List<T>.printResult() {
 fun List<List<Cell>>.printResultWithTimelines() {
     for ((num, line) in withIndex()) {
         val chars = line.joinToString(" ") { it.char.toString() }
-        val timelines = line.joinToString(" ") { it.timelines.toString().padStart(5, '0') }
+        val timelines = line.joinToString(" ") { it.timelines.toString().padStart(13, '0') }
 
         val numPadded = num.toString().padEnd(3, ' ')
         println("$numPadded | $chars  ║  $timelines")
