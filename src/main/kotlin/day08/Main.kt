@@ -5,12 +5,14 @@ import kotlin.math.sqrt
 import kotlin.system.measureNanoTime
 
 var answer:Long = 0
+val CONNECTIONS = 1000
 
 data class JunctionBox(
     val x: Double,
     val y: Double,
     val z: Double,
-    var closest: Pair<JunctionBox, Double>? = null
+    var closest: Pair<JunctionBox, Double>? = null,
+    val conections: MutableList<JunctionBox> = mutableListOf()
 ) {
     override fun toString(): String {
         //val bx = closest?.first?.x.toString() ?: "0"
@@ -25,13 +27,13 @@ data class JunctionBox(
 
 fun main() {
     val time = measureNanoTime {
-        val inputFile = readFile("example.txt")
+        val inputFile = readFile("input.txt")
         val lines = inputFile.readLines()
         val boxesPositions = lines.map { it.toJunctionBox() }
 
         answer = boxesPositions.makeCircuits()
-        println("  ===============================================  ")
-        boxesPositions.sortedBy { it.closest?.second ?: Double.MAX_VALUE }.printResult()
+        //println("  ===============================================  ")
+        //boxesPositions.sortedBy { it.closest?.second ?: Double.MAX_VALUE }.printResult()
         //boxesPositions.printResult()
     }
 
@@ -58,10 +60,12 @@ private fun List<JunctionBox>.makeCircuits(): Long {
 
     boxes.forEach { it.findClosestOn(this) }
 
-    repeat(10) {
+    repeat(CONNECTIONS) {
         val firstBox = boxes.minBy { box ->
-            if (circuits.find { box in it }?.contains(box.closest!!.first) ?: false) Double.MAX_VALUE
-            else box.closest?.second ?: Double.MAX_VALUE
+            if (box.conections.contains(box.closest!!.first))
+                Double.MAX_VALUE
+            else
+                box.closest!!.second
         }
 
         val secondBox = firstBox.closest?.first!!
@@ -72,14 +76,14 @@ private fun List<JunctionBox>.makeCircuits(): Long {
         when {
             circuitA != null && circuitB == null -> {
                 circuitA.add(secondBox)
-                firstBox.findClosestOn(boxes.filter { circuitA!!.contains(it) })
-                secondBox.findClosestOn(boxes.filter { circuitA!!.contains(it) })
+                firstBox.findClosestOn(boxes.filter { circuitA.contains(it) })
+                secondBox.findClosestOn(boxes.filter { circuitA.contains(it) })
             }
 
             circuitA == null && circuitB != null -> {
                 circuitB.add(firstBox)
-                firstBox.findClosestOn(boxes.filter { circuitB!!.contains(it) })
-                secondBox.findClosestOn(boxes.filter { circuitB!!.contains(it) })
+                firstBox.findClosestOn(boxes.filter { circuitB.contains(it) })
+                secondBox.findClosestOn(boxes.filter { circuitB.contains(it) })
             }
 
             circuitA == null && circuitB == null -> {
@@ -92,16 +96,19 @@ private fun List<JunctionBox>.makeCircuits(): Long {
             circuitA !== circuitB -> {
                 circuitA!!.addAll(circuitB!!)
                 circuits.remove(circuitB)
-                firstBox.findClosestOn(boxes.filter { circuitA!!.contains(it) })
-                secondBox.findClosestOn(boxes.filter { circuitA!!.contains(it) })
+                firstBox.findClosestOn(boxes.filter { circuitA.contains(it) })
+                secondBox.findClosestOn(boxes.filter { circuitA.contains(it) })
             }
 
             else -> Unit
         }
 
+        firstBox.conections.add(secondBox)
+        secondBox.conections.add(firstBox)
+
     }
 
-    circuits.printResult()
+    //circuits.sortedByDescending { it.size }.printResult()
     return circuits
                 .map { it.size }
                 .sortedDescending()
